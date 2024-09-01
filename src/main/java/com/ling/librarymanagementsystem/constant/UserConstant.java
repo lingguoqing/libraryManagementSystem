@@ -27,7 +27,15 @@ public interface UserConstant {
      */
     String BAN_ROLE = "ban";
 
+    /**
+     * token中用户信息
+     */
     String USER_INFO = "user_info";
+
+    /**
+     * token
+     */
+    String AUTHORIZATION = "Authorization";
 
     // endregion
 }

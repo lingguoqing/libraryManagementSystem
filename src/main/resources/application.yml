@@ -8,3 +8,8 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+token:
+  sign_sercret: 123456
+  expire_time: 3600000

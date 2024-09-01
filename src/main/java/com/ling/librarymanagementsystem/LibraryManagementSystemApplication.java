@@ -7,7 +7,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 
 @ServletComponentScan // 扫描过滤器
 @SpringBootApplication
-@MapperScan("com.ling.librarymanagementsystem")
+@MapperScan("com.ling.librarymanagementsystem.mapper") // 扫描mapper
 public class LibraryManagementSystemApplication {
 
     public static void main(String[] args) {

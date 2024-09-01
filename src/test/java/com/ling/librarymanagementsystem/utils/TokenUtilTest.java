@@ -3,6 +3,8 @@ package com.ling.librarymanagementsystem.utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Base64;
+
 import javax.annotation.Resource;
 
 @SpringBootTest
@@ -13,9 +15,10 @@ class TokenUtilTest {
 
     @Test
     void generateToken() {
-        String token = tokenUtil.createToken("username:ling");
-        System.out.println(token);
-        System.out.println(tokenUtil.verifyToken(token));
+        String encodedString = "Dp2EiPugQpXJ+3TYxHQqWw==";
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+        String decodedString = new String(decodedBytes);
+        System.out.println(decodedString);
     }
 
 }

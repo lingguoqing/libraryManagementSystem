@@ -10,4 +10,7 @@ import com.ling.librarymanagementsystem.model.entity.User;
 */
 public interface UserService extends IService<User> {
 
+    long register(String username, String password, String checkPassword);
+
+    String userLogin(String username, String password);
 }

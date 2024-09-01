@@ -1,28 +1,37 @@
 package com.ling.librarymanagementsystem.common;
 
-public class BaseResponse {
+import lombok.Data;
 
-    public static <T> ResultResponse<T> success(T data) {
-        return new ResultResponse<T>(ResultErrorCode.SUCCESS.getCode(), ResultErrorCode.SUCCESS.getMessage(), data);
+/**
+ * 统一返回结果类
+ *
+ * @param <T>
+ */
+@Data
+public class BaseResponse<T> {
+
+    private int code;
+
+    private String message;
+
+    private T data;
+
+    public BaseResponse(int code, String message, T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
     }
 
-    public static <T> ResultResponse<T> success(int code, String message) {
-        return new ResultResponse<T>(code, message);
+    public BaseResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
-    public static <T> ResultResponse<T> success(int code, String message, T data) {
-        return new ResultResponse<T>(code, message, data);
+    public BaseResponse(ResultErrorCode resultErrorCode) {
+        this(resultErrorCode.getCode(), resultErrorCode.getMessage(), null);
     }
 
-    public static <T> ResultResponse<T> fail(ResultErrorCode resultErrorCode, T data) {
-        return new ResultResponse<T>(resultErrorCode.getCode(), resultErrorCode.getMessage(), data);
-    }
-
-    public static <T> ResultResponse<T> fail(ResultErrorCode resultErrorCode) {
-        return new ResultResponse<T>(resultErrorCode.getCode(), resultErrorCode.getMessage());
-    }
-
-    public static <T> ResultResponse<T> fail(int code, String message) {
-        return new ResultResponse<T>(code, message);
+    public BaseResponse(ResultErrorCode resultErrorCode, T data) {
+        this(resultErrorCode.getCode(), resultErrorCode.getMessage(), data);
     }
 }

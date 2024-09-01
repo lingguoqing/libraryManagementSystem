@@ -3,7 +3,6 @@ package com.ling.librarymanagementsystem.filter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.ling.librarymanagementsystem.common.ResultErrorCode;
-import com.ling.librarymanagementsystem.common.ResultResponse;
 import com.ling.librarymanagementsystem.constant.UserConstant;
 import com.ling.librarymanagementsystem.exception.BusinessException;
 import com.ling.librarymanagementsystem.model.entity.User;
@@ -36,7 +35,7 @@ public class LoginFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
         String url = httpServletRequest.getRequestURI();
-        log.info(url);
+
 
         if (isSwaggerRequest(httpServletRequest)) {
             // 如果是，则跳过身份验证
@@ -49,29 +48,30 @@ public class LoginFilter implements Filter {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
+        log.info(url);
 
         String token = httpServletRequest.getHeader(UserConstant.AUTHORIZATION);
-        ResultResponse resultResponse = null;
+        BusinessException businessException = null;
         // 验证token是否存在
         if (StrUtil.isBlank(token)) {
-            resultResponse = new ResultResponse(ResultErrorCode.OPERATION_ERROR, "不存在token");
-            sendErrorResponse(httpServletResponse, resultResponse);
+            businessException = new BusinessException(ResultErrorCode.OPERATION_ERROR, "不存在token");
+            sendErrorResponse(httpServletResponse, businessException);
             return;
         }
 
         // 验证token是否过期
         boolean tokenExpired = tokenUtil.isTokenExpired(token);
         if (!tokenExpired) {
-            resultResponse = new ResultResponse(ResultErrorCode.OPERATION_ERROR, "token未过期");
-            sendErrorResponse(httpServletResponse, resultResponse);
+            businessException = new BusinessException(ResultErrorCode.OPERATION_ERROR, "token未过期");
+            sendErrorResponse(httpServletResponse, businessException);
             return;
         }
 
         // 验证token是否合法
         String verifyToken = tokenUtil.verifyToken(token);
         if (StrUtil.isBlank(verifyToken)) {
-            resultResponse = new ResultResponse(ResultErrorCode.OPERATION_ERROR, "token验证失败,请重新登录");
-            sendErrorResponse(httpServletResponse, resultResponse);
+            businessException = new BusinessException(ResultErrorCode.OPERATION_ERROR, "token验证失败,请重新登录");
+            sendErrorResponse(httpServletResponse, businessException);
             return;
         }
 
@@ -79,13 +79,12 @@ public class LoginFilter implements Filter {
         LoginUserVo loginUserVo = JSONUtil.toBean(verifyToken, LoginUserVo.class);
         User user = userService.getById(loginUserVo.getId());
         if (user == null) {
-            resultResponse = new ResultResponse(ResultErrorCode.OPERATION_ERROR, "用户不存在,请重新登录");
-            sendErrorResponse(httpServletResponse, resultResponse);
+            businessException = new BusinessException(ResultErrorCode.OPERATION_ERROR, "用户不存在,请重新登录");
+            sendErrorResponse(httpServletResponse, businessException);
             return;
         }
 
-        doFilter(httpServletRequest, servletResponse, filterChain);
-
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
     /**
@@ -98,6 +97,7 @@ public class LoginFilter implements Filter {
         String path = request.getRequestURI();
         return path.startsWith("/swagger")
                 || path.startsWith("/v2/api-docs")
+                || path.startsWith("/webjars")
                 || path.equals("/doc.html")
                 || path.startsWith("/swagger-resources");
     }
@@ -106,12 +106,12 @@ public class LoginFilter implements Filter {
      * 发送错误响应
      *
      * @param response
-     * @param resultResponse
+     * @param businessException
      * @throws IOException
      */
-    private void sendErrorResponse(HttpServletResponse response, ResultResponse resultResponse) throws IOException {
-        log.info(resultResponse.toString());
-        String json = JSONUtil.toJsonStr(resultResponse);
+    private void sendErrorResponse(HttpServletResponse response, BusinessException businessException) throws IOException {
+        log.info(businessException.toString());
+        String json = JSONUtil.toJsonStr(businessException);
         response.setContentType("application/json;charset=utf-8");
         response.getWriter().write(json);
     }

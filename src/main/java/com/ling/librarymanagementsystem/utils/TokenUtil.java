@@ -31,7 +31,7 @@ public class TokenUtil {
      * @param currentUser 用户信息
      * @return
      */
-    public String createToken(String currentUser) {
+    public String generateToken(String currentUser) {
         String sign = JWT.create()
                 .withClaim(UserConstant.USER_INFO, currentUser)
                 .withIssuedAt(new Date())

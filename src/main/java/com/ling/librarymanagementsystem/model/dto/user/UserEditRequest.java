@@ -1,17 +1,18 @@
-package com.ling.librarymanagementsystem.model.entity;
+package com.ling.librarymanagementsystem.model.dto.user;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * @TableName user
+ * 编辑用户
  */
-@TableName(value = "user")
 @Data
-public class User implements Serializable {
+public class UserEditRequest implements Serializable {
+
     /**
      *
      */
@@ -58,32 +59,6 @@ public class User implements Serializable {
      */
     private String userProfile;
 
-    /**
-     * 用户权限
-     */
-    private String userRole;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 是否删除（0：未删除；1：已删除）
-     */
-//    @TableField("is_delete")
-    @TableLogic
-    private Integer isDelete;
-
-    /**
-     * 编辑时间
-     */
-    private Date editTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

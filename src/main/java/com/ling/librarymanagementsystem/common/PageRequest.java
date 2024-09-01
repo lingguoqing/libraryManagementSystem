@@ -1,6 +1,5 @@
 package com.ling.librarymanagementsystem.common;
 
-import com.ling.answer.constant.CommonConstant;
 import lombok.Data;
 
 /**
@@ -27,5 +26,5 @@ public class PageRequest {
     /**
      * 排序顺序（默认升序）
      */
-    private String sortOrder = CommonConstant.SORT_ORDER_ASC;
+//    private String sortOrder = CommonConstant.SORT_ORDER_ASC;
 }

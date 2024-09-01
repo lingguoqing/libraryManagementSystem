@@ -13,3 +13,14 @@ spring:
 token:
   sign_sercret: 123456
   expire_time: 3600000
+
+knife4j:
+  enable: true
+  openapi:
+    title: "接口文档"
+    version: 1.0
+    group:
+      default:
+        api-rule: package
+        api-rule-resources:
+          - com.ling.librarymanagementsystem.controller

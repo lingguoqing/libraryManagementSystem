@@ -26,4 +26,12 @@ public class ResultResponse<T> {
         this.code = code;
         this.message = message;
     }
+
+    public ResultResponse(ResultErrorCode resultErrorCode) {
+        this(resultErrorCode.getCode(), resultErrorCode.getMessage(), null);
+    }
+
+    public ResultResponse(ResultErrorCode resultErrorCode, T data) {
+        this(resultErrorCode.getCode(), resultErrorCode.getMessage(), data);
+    }
 }

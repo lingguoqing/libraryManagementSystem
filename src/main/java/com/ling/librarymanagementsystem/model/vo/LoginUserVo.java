@@ -1,7 +1,6 @@
 package com.ling.librarymanagementsystem.model.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.io.Serializable;

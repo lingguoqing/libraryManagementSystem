@@ -6,14 +6,12 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ling.librarymanagementsystem.constant.UserConstant;
-import com.ling.librarymanagementsystem.model.vo.LoginUserVo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.Date;
-import java.util.HashMap;
 
 /**
  * Token

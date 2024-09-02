@@ -126,6 +126,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public Long add(UserAddRequest userAddRequest) {
+        log.info("添加用户操作");
         String username = userAddRequest.getUsername();
         if (StringUtils.isEmpty(username)) {
             throw new BusinessException(ResultErrorCode.PARAMS_ERROR, "用户名不能为空");

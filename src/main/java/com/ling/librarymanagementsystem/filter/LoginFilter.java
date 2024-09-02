@@ -116,6 +116,7 @@ public class LoginFilter implements Filter {
      * @throws IOException
      */
     private void sendErrorResponse(HttpServletResponse response, BaseResponse baseResponse) throws IOException {
+        // 将错误信息转换为JSON格式
         String json = JSONUtil.toJsonStr(baseResponse);
         response.setContentType("application/json;charset=utf-8");
         response.getWriter().write(json);

@@ -1,0 +1,22 @@
+2024-09-02 13:54:59.807 [INFO ] com.ling.librarymanagementsystem.LibraryManagementSystemApplication - Starting LibraryManagementSystemApplication using Java 1.8.0_422 on DESKTOP-BD02PV8 with PID 2716 (F:\libraryManagementSystem\target\classes started by 17102 in F:\libraryManagementSystem)
+2024-09-02 13:54:59.809 [INFO ] com.ling.librarymanagementsystem.LibraryManagementSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2024-09-02 13:54:59.854 [INFO ] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-09-02 13:54:59.854 [INFO ] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-09-02 13:55:00.533 [INFO ] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-09-02 13:55:00.535 [INFO ] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-09-02 13:55:00.553 [INFO ] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
+2024-09-02 13:55:01.178 [INFO ] org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 9090 (http)
+2024-09-02 13:55:01.237 [INFO ] org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2024-09-02 13:55:01.237 [INFO ] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2024-09-02 13:55:01.238 [INFO ] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.68]
+2024-09-02 13:55:01.291 [INFO ] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-09-02 13:55:01.291 [INFO ] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1436 ms
+2024-09-02 13:55:02.220 [INFO ] org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-09-02 13:55:02.239 [INFO ] org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2024-09-02 13:55:02.295 [INFO ] springfox.documentation.spring.web.WebMvcPropertySourcedRequestMappingHandlerMapping - Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2ControllerWebMvc#getDocumentation(String, HttpServletRequest)]
+2024-09-02 13:55:02.593 [INFO ] org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
+2024-09-02 13:55:02.621 [INFO ] org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 9090 (http) with context path ''
+2024-09-02 13:55:02.622 [INFO ] springfox.documentation.spring.web.plugins.DocumentationPluginsBootstrapper - Documentation plugins bootstrapped
+2024-09-02 13:55:02.624 [INFO ] springfox.documentation.spring.web.plugins.DocumentationPluginsBootstrapper - Found 1 custom documentation plugin(s)
+2024-09-02 13:55:02.645 [INFO ] springfox.documentation.spring.web.scanners.ApiListingReferenceScanner - Scanning for api listing references
+2024-09-02 13:55:02.760 [INFO ] com.ling.librarymanagementsystem.LibraryManagementSystemApplication - Started LibraryManagementSystemApplication in 3.403 seconds (JVM running for 4.345)

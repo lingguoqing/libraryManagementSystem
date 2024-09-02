@@ -33,3 +33,6 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.ling.librarymanagementsystem.controller
+
+logging:
+  config: classpath:logback-spring.xml

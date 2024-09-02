@@ -1,18 +1,18 @@
-package com.ling.librarymanagementsystem.model.entity;
+package com.ling.librarymanagementsystem.model.vo;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @TableName user
- */
-@TableName(value = "user")
 @Data
-public class User implements Serializable {
+public class UserVO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     /**
      *
      */
@@ -23,11 +23,6 @@ public class User implements Serializable {
      * 用户名
      */
     private String username;
-
-    /**
-     * 密码
-     */
-    private String password;
 
     /**
      * 头像
@@ -59,10 +54,6 @@ public class User implements Serializable {
      */
     private String userProfile;
 
-    /**
-     * 用户权限
-     */
-    private String userRole;
 
     /**
      * 创建时间
@@ -76,11 +67,6 @@ public class User implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
 
-    /**
-     * 是否删除（0：未删除；1：已删除）
-     */
-    @TableLogic
-    private Integer isDelete;
 
     /**
      * 编辑时间
@@ -88,6 +74,4 @@ public class User implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date editTime;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

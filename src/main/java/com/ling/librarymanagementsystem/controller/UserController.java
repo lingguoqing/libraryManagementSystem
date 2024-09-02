@@ -1,26 +1,24 @@
 package com.ling.librarymanagementsystem.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ling.librarymanagementsystem.annotation.AuthCheck;
-import com.ling.librarymanagementsystem.common.BaseResponse;
-import com.ling.librarymanagementsystem.common.DeleteRequest;
-import com.ling.librarymanagementsystem.common.ResultErrorCode;
-import com.ling.librarymanagementsystem.common.ResultResponse;
+import com.ling.librarymanagementsystem.common.*;
 import com.ling.librarymanagementsystem.constant.UserConstant;
 import com.ling.librarymanagementsystem.exception.BusinessException;
-import com.ling.librarymanagementsystem.model.dto.user.UserAddRequest;
-import com.ling.librarymanagementsystem.model.dto.user.UserLoginRequest;
-import com.ling.librarymanagementsystem.model.dto.user.UserRegisterRequest;
-import com.ling.librarymanagementsystem.model.dto.user.UserUpdateRequest;
+import com.ling.librarymanagementsystem.exception.ThrowUtils;
+import com.ling.librarymanagementsystem.model.dto.user.*;
+import com.ling.librarymanagementsystem.model.entity.User;
+import com.ling.librarymanagementsystem.model.vo.LoginUserVo;
+import com.ling.librarymanagementsystem.model.vo.UserVO;
 import com.ling.librarymanagementsystem.service.UserService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -68,25 +66,12 @@ public class UserController {
      */
     @PostMapping("/add")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse add(@RequestBody UserAddRequest userAddRequest) {
+    public BaseResponse<Long> add(@RequestBody UserAddRequest userAddRequest) {
         if (userAddRequest == null) {
             throw new BusinessException(ResultErrorCode.PARAMS_ERROR);
         }
-        return null;
-    }
-
-    /**
-     * 更新用户
-     *
-     * @param userUpdateRequest
-     * @return
-     */
-    @PostMapping("/update")
-    public BaseResponse update(@RequestBody UserUpdateRequest userUpdateRequest) {
-        if (userUpdateRequest == null) {
-            throw new BusinessException(ResultErrorCode.PARAMS_ERROR);
-        }
-        return null;
+        Long count = userService.add(userAddRequest);
+        return ResultResponse.success(count);
     }
 
     /**
@@ -96,11 +81,13 @@ public class UserController {
      * @return
      */
     @PostMapping("/edit")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse edit(@RequestBody UserUpdateRequest userUpdateRequest) {
         if (userUpdateRequest == null) {
             throw new BusinessException(ResultErrorCode.PARAMS_ERROR);
         }
-        return null;
+        Long count = userService.editByUserAndId(userUpdateRequest);
+        return ResultResponse.success(count);
     }
 
     /**
@@ -110,11 +97,78 @@ public class UserController {
      * @return
      */
     @PostMapping("/delete")
-    public BaseResponse delete(@RequestBody DeleteRequest deleteRequest) {
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> delete(@RequestBody DeleteRequest deleteRequest) {
         if (deleteRequest == null) {
             throw new BusinessException(ResultErrorCode.PARAMS_ERROR);
         }
-        return null;
+        boolean remove = userService.removeById(deleteRequest.getId());
+        if (!remove) {
+            throw new BusinessException(ResultErrorCode.PARAMS_ERROR, "删除失败");
+        }
+        return ResultResponse.success(remove);
+    }
+
+    /**
+     * 更新用户
+     *
+     * @param userUpdateRequest
+     * @return
+     */
+    @PostMapping("/update/my")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Long> update(@RequestBody UserUpdateRequest userUpdateRequest) {
+        if (userUpdateRequest == null) {
+            throw new BusinessException(ResultErrorCode.PARAMS_ERROR);
+        }
+        Long count = userService.updateByUserAndId(userUpdateRequest);
+        return ResultResponse.success(count);
+    }
+
+    @PostMapping("/list/page")
+    public BaseResponse<Page<User>> list(@RequestBody UserQueryRequest userQueryRequest) {
+        long current = userQueryRequest.getCurrent();
+        long size = userQueryRequest.getPageSize();
+        Page<User> userPage = userService.page(new Page<>(current, size),
+                userService.getQueryWrapper(userQueryRequest));
+        return ResultResponse.success(userPage);
+    }
+
+
+    /**
+     * 分页获取用户封装列表
+     *
+     * @param userQueryRequest
+     * @param request
+     * @return
+     */
+    @PostMapping("/list/page/vo")
+    public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest,
+                                                       HttpServletRequest request) {
+        if (userQueryRequest == null) {
+            throw new BusinessException(ResultErrorCode.PARAMS_ERROR);
+        }
+        long current = userQueryRequest.getCurrent();
+        long size = userQueryRequest.getPageSize();
+        // 限制爬虫
+        ThrowUtils.throwIf(size > 20, ResultErrorCode.PARAMS_ERROR);
+        Page<User> userPage = userService.page(new Page<>(current, size),
+                userService.getQueryWrapper(userQueryRequest));
+        Page<UserVO> userVOPage = new Page<>(current, size, userPage.getTotal());
+        List<UserVO> userVO = userService.getUserVO(userPage.getRecords());
+        userVOPage.setRecords(userVO);
+        return ResultResponse.success(userVOPage);
+    }
+
+    /**
+     * 获取当前登录用户信息
+     *
+     * @return
+     */
+    @GetMapping("/get")
+    public BaseResponse<LoginUserVo> getUser() {
+        LoginUserVo threadLocal = BaseContext.getThreadLocal();
+        return ResultResponse.success(threadLocal);
     }
 
 }

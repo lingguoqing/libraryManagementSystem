@@ -2,9 +2,10 @@ package com.ling.librarymanagementsystem.filter;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.ling.librarymanagementsystem.common.BaseContext;
+import com.ling.librarymanagementsystem.common.BaseResponse;
 import com.ling.librarymanagementsystem.common.ResultErrorCode;
 import com.ling.librarymanagementsystem.constant.UserConstant;
-import com.ling.librarymanagementsystem.exception.BusinessException;
 import com.ling.librarymanagementsystem.model.entity.User;
 import com.ling.librarymanagementsystem.model.vo.LoginUserVo;
 import com.ling.librarymanagementsystem.service.UserService;
@@ -51,27 +52,27 @@ public class LoginFilter implements Filter {
         log.info(url);
 
         String token = httpServletRequest.getHeader(UserConstant.AUTHORIZATION);
-        BusinessException businessException = null;
+        BaseResponse baseResponse = null;
         // 验证token是否存在
         if (StrUtil.isBlank(token)) {
-            businessException = new BusinessException(ResultErrorCode.OPERATION_ERROR, "不存在token");
-            sendErrorResponse(httpServletResponse, businessException);
+            baseResponse = new BaseResponse(ResultErrorCode.OPERATION_ERROR, "不存在token，请登录");
+            sendErrorResponse(httpServletResponse, baseResponse);
             return;
         }
 
         // 验证token是否过期
         boolean tokenExpired = tokenUtil.isTokenExpired(token);
         if (!tokenExpired) {
-            businessException = new BusinessException(ResultErrorCode.OPERATION_ERROR, "token未过期");
-            sendErrorResponse(httpServletResponse, businessException);
+            baseResponse = new BaseResponse(ResultErrorCode.OPERATION_ERROR, "token已过期");
+            sendErrorResponse(httpServletResponse, baseResponse);
             return;
         }
 
         // 验证token是否合法
         String verifyToken = tokenUtil.verifyToken(token);
         if (StrUtil.isBlank(verifyToken)) {
-            businessException = new BusinessException(ResultErrorCode.OPERATION_ERROR, "token验证失败,请重新登录");
-            sendErrorResponse(httpServletResponse, businessException);
+            baseResponse = new BaseResponse(ResultErrorCode.OPERATION_ERROR, "token验证失败,请重新登录");
+            sendErrorResponse(httpServletResponse, baseResponse);
             return;
         }
 
@@ -79,12 +80,17 @@ public class LoginFilter implements Filter {
         LoginUserVo loginUserVo = JSONUtil.toBean(verifyToken, LoginUserVo.class);
         User user = userService.getById(loginUserVo.getId());
         if (user == null) {
-            businessException = new BusinessException(ResultErrorCode.OPERATION_ERROR, "用户不存在,请重新登录");
-            sendErrorResponse(httpServletResponse, businessException);
+            baseResponse = new BaseResponse(ResultErrorCode.OPERATION_ERROR, "用户不存在,请重新登录");
+            sendErrorResponse(httpServletResponse, baseResponse);
             return;
         }
-
+        BaseContext.setThreadLocal(loginUserVo);
         filterChain.doFilter(httpServletRequest, httpServletResponse);
+    }
+
+    @Override
+    public void destroy() {
+        BaseContext.clearThreadLocal();
     }
 
     /**
@@ -106,12 +112,11 @@ public class LoginFilter implements Filter {
      * 发送错误响应
      *
      * @param response
-     * @param businessException
+     * @param baseResponse
      * @throws IOException
      */
-    private void sendErrorResponse(HttpServletResponse response, BusinessException businessException) throws IOException {
-        log.info(businessException.toString());
-        String json = JSONUtil.toJsonStr(businessException);
+    private void sendErrorResponse(HttpServletResponse response, BaseResponse baseResponse) throws IOException {
+        String json = JSONUtil.toJsonStr(baseResponse);
         response.setContentType("application/json;charset=utf-8");
         response.getWriter().write(json);
     }
